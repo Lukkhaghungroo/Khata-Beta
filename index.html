@@ -59,10 +59,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:8px 3px;b
 .cg a u.red{background:var(--red)}.cg a u.grn{background:var(--grn)}
 .wa{display:inline-block;background:#25d366;color:#04210f;font-weight:700;font-size:14px;padding:11px 16px;border-radius:12px;text-decoration:none;white-space:nowrap}
 .row .wa{font-size:12px;padding:7px 11px}
+.ib.pf{background:linear-gradient(135deg,var(--ac),var(--a2));color:#fff;font-weight:700;border:0}
 #pr{display:none}
 @media print{body>*:not(#pr){display:none!important}#pr{display:block}#pr img{width:100%}dialog{display:none!important}}
 </style></head><body>
-<div class="w"><div class="top"><h1 id="ttl">Overview</h1><button class="ib" onclick="setts()">⚙</button></div><div id="v"></div></div>
+<div class="w"><div class="top"><h1 id="ttl">Overview</h1><div style="display:flex;gap:8px"><button class="ib pf" id="pf" onclick="prof()" style="display:none"></button><button class="ib" onclick="setts()">⚙</button></div></div><div id="v"></div></div>
 <button class="fab" id="fab">+ Add</button>
 <nav id="nv"></nav>
 <dialog id="sheet"><div id="sc"></div></dialog>
@@ -216,7 +217,7 @@ function pgate(){const m=PD.me,adm=waNum((PD.cfg||{}).phone);
  if(m.status==='pending')return`<div class="hero"><small>Registration sent</small><b style="font-size:24px">Waiting for approval</b></div><p class="s">The owner will review your details. You get access once approved.</p><div class="bar">${adm?`<a class="wa" href="https://wa.me/${adm}?text=${encodeURIComponent('Hi, I have registered as a partner ('+m.name+'). Please approve.')}" target="_blank">Notify owner on WhatsApp</a>`:''}<button class="btn" onclick="cloudOut()">Sign out</button></div>`;
  return`<div class="hero"><small>Access paused</small><b style="font-size:24px">Account suspended</b></div><p class="s">Please contact the owner.</p><div class="bar"><button class="btn" onclick="cloudOut()">Sign out</button></div>`}
 async function pregSave(e){e.preventDefault();const v=i=>$('#'+i).value.trim();try{await fs.set('partners',PD.uid,{name:v('rn'),phone:v('rp'),idp:v('ri'),addr:v('ra'),upi:v('ru'),email:cloud.email,status:'pending',t:Date.now()})}catch(x){alert('Could not submit: '+(x.code||x.message))}}
-function prender(){const nv=$('#nv'),fab=$('#fab'),m=PD.me;window.lDet=pLoan;$('#ttl').textContent='Partner';
+function prender(){av();const nv=$('#nv'),fab=$('#fab'),m=PD.me;window.lDet=pLoan;$('#ttl').textContent='Partner';
  if(!PD.loaded||!m||m.status!=='approved'){$('#v').innerHTML=PD.loaded?pgate():'<div class="em">Loading…</div>';nv.style.display=fab.style.display='none';return}
  nv.style.display=fab.style.display='';if(!['home','bor','req'].includes(tab))tab='home';
  nv.innerHTML=navH([['home','Home'],['bor','Customers'],['req','Requests']]);
@@ -254,6 +255,13 @@ function pLoan(id){const l=D.l.find(x=>x.id===id),c=calc(l),b=B(l.bid),n=waNum(b
  <div class="bar">${b.phone?`<a class="btn" href="tel:${esc(b.phone)}" style="text-decoration:none">Call</a>`:''}${waBtn(l,'WhatsApp reminder')}<button class="btn" onclick="sh.close()" style="margin-left:auto">Close</button></div>`)}
 function pStmt(){const ls=D.l.filter(l=>comm(l)>0),E=ls.reduce((s,l)=>s+comm(l),0),pd=PD.p.reduce((s,x)=>s+x.a,0);
  rc(mk('Commission Statement',PD.me.name.slice(0,8).toUpperCase(),[['Partner',PD.me.name],...ls.map(l=>[B(l.bid).name+' · '+no(l),inr(comm(l))]),['Total earned',inr(E),1],['Paid out',inr(pd)],['Pending payout',inr(E-pd),1]],['Partner','Owner']),'commission-statement')}
+function av(){const e=$('#pf'),n=ROLE==='partner'?(PD.me&&PD.me.name):ROLE==='admin'?(D.s.biz||cloud.email):'';e.style.display=n?'':'none';e.textContent=String(n||'?')[0].toUpperCase()}
+function prof(){
+ if(ROLE==='partner'){const p=PD.me||{};return S(`<h2>My profile</h2><div class="s">${esc(cloud.email)} · Partner · ${p.status||''}${p.pct!=null?' · commission '+p.pct+'%':''}</div>
+ <form onsubmit="profSave(event)">${f('mn','Name',p.name,'required')}<div class="g2">${f('mp','Phone',p.phone,'type=tel')}${f('mi','ID proof (type + last 4)',p.idp)}</div>${f('ma','Address',p.addr)}${f('mu','UPI ID for payouts',p.upi)}
+ <div class="bar"><button class="btn p">Save profile</button></div></form><div class="bar" style="margin-top:22px"><button class="btn d" onclick="cloudOut()">Sign out</button></div>`)}
+ S(`<h2>My profile</h2>${kvh('Role','Owner (admin)')}${kvh('Signed in as',cloud.email)}${kvh('Business',D.s.biz)}${kvh('Business phone',D.s.phone)}<div class="bar"><button class="btn" onclick="setts()">Settings</button><button class="btn d" onclick="cloudOut()">Sign out</button></div>`)}
+async function profSave(e){e.preventDefault();const v=i=>$('#'+i).value.trim();try{await fs.upd('partners',PD.uid,{name:v('mn'),phone:v('mp'),idp:v('mi'),addr:v('ma'),upi:v('mu')});sh.close()}catch(x){alert('Could not save: '+(x.code||x.message))}}
 function psetts(){S(`<h2>Settings</h2>${kvh('Name',PD.me.name)}${kvh('Phone',PD.me.phone)}${kvh('UPI',PD.me.upi)}${kvh('Signed in',cloud.email)}<div class="bar"><button class="btn" onclick="askN()">Enable phone alerts</button><button class="btn" onclick="ics(D.l)">Calendar reminders</button><button class="btn d" onclick="cloudOut()">Sign out</button></div>`)}
 
 function bl(){const v=D.b.filter(b=>b.name.toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name));
@@ -264,9 +272,9 @@ function bor(){return`<input placeholder="Search borrowers…" oninput="q=this.v
 function ll(){const o={Overdue:0,Active:1,Closed:2},v=D.l.map(l=>({l,c:calc(l)})).filter(x=>(fl==='All'||x.c.st===fl)&&B(x.l.bid).name.toLowerCase().includes(q)).sort((a,b)=>o[a.c.st]-o[b.c.st]||a.c.due.localeCompare(b.c.due));
  return v.length?v.map(x=>lcard(x.l,x.c)).join(''):'<div class="em">No loans here.</div>'}
 function loans(){return`<input placeholder="Search by borrower…" oninput="q=this.value.toLowerCase();$('#lst').innerHTML=ll()"><div class="chips">${['All','Active','Overdue','Closed'].map(s=>`<span class="chip ${fl===s?'on':''}" onclick="fl='${s}';render()">${s}</span>`).join('')}</div><div id="lst">${ll()}</div>`}
-function render(){if(ROLE==='partner')return prender();window.lDet=LD0;const nv=$('#nv'),fab=$('#fab');
+function render(){av();if(ROLE==='partner')return prender();window.lDet=LD0;const nv=$('#nv'),fab=$('#fab');
  if((ROLE==='out'||ROLE==='init')&&!D.b.length&&!D.l.length){$('#ttl').textContent='Loan Ledger';$('#v').innerHTML=loginView();nv.style.display=fab.style.display='none';return}
- nv.style.display='';const pn=pendN();nv.innerHTML=navH([['home','Dashboard'],['bor','Borrowers'],['loans','Loans'],['par','Partners',pn||'']]);
+ nv.style.display='';if(!['home','bor','loans','par'].includes(tab))tab='home';const pn=pendN();nv.innerHTML=navH([['home','Dashboard'],['bor','Borrowers'],['loans','Loans'],['par','Partners',pn||'']]);
  $('#v').innerHTML=({home,bor,loans,par})[tab]();$('#ttl').textContent={home:'Overview',bor:'Borrowers',loans:'Loans',par:'Partners'}[tab];
  nv.querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.dataset.t===tab));fab.style.display=tab==='par'?'none':'';fab.textContent=tab==='bor'?'+ Borrower':'+ Loan';fab.onclick=()=>tab==='bor'?bForm():lForm()}
 const go=t=>{tab=t;q='';fl='All';render();scrollTo(0,0)};
@@ -368,7 +376,7 @@ function setts(){if(ROLE==='partner')return psetts();S(`<h2>Settings</h2>${f('sb
  <textarea id="stp" rows="10" style="width:100%;padding:12px;border:1px solid var(--bd);border-radius:12px;background:var(--c);font:inherit;color:var(--tx)">${esc(D.s.tpl||DEFTPL)}</textarea>
  <div class="s">Placeholders: {name} {business} {business_phone} {loan_no} {loan_amount} {interest} {total} {paid} {balance} {disbursed} {due_date} {status}</div>
  <div class="bar" style="margin-top:8px"><button class="btn" type="button" onclick="$('#stp').value=DEFTPL">Reset template</button></div>
- <div class="bar"><button class="btn p" onclick="sSave()">Save</button></div><h3>Cloud sync</h3><div class="bar" style="margin-top:0">${window.cloud.st==='in'?`<span class="s" style="align-self:center">Signed in as ${esc(window.cloud.email)}</span><button class="btn" onclick="cloudOut()">Sign out</button>`:`<button class="btn p" onclick="cloudIn()">Sign in with Google</button>`}</div>${BETA?`<h3>Beta tools</h3><div class="bar" style="margin-top:0"><button class="btn" onclick="cloudCopyLive()">Copy live data into beta</button></div>`:''}<h3>Storage</h3><div class="s" id="stg">Checking…</div><div class="bar" style="margin-top:6px"><button class="btn" onclick="purge('c')">Delete collateral photos of closed loans</button><button class="btn" onclick="purge('a')">Delete Aadhaar photos of borrowers with no open loans</button></div><h3>Alerts & backup</h3><div class="bar" style="margin-top:0">
+ <div class="bar"><button class="btn p" onclick="sSave()">Save</button></div><h3>Cloud sync</h3><div class="bar" style="margin-top:0">${window.cloud.email?`<span class="s" style="align-self:center">Signed in as ${esc(window.cloud.email)}</span><button class="btn" onclick="cloudOut()">Sign out</button>`:`<button class="btn p" onclick="cloudIn()">Sign in with Google</button>`}</div>${BETA?`<h3>Beta tools</h3><div class="bar" style="margin-top:0"><button class="btn" onclick="cloudCopyLive()">Copy live data into beta</button></div>`:''}<h3>Storage</h3><div class="s" id="stg">Checking…</div><div class="bar" style="margin-top:6px"><button class="btn" onclick="purge('c')">Delete collateral photos of closed loans</button><button class="btn" onclick="purge('a')">Delete Aadhaar photos of borrowers with no open loans</button></div><h3>Alerts & backup</h3><div class="bar" style="margin-top:0">
  <button class="btn" onclick="askN()">Enable phone alerts</button><button class="btn" onclick="ics(D.l)">Calendar reminders (all open loans)</button>
  <button class="btn" onclick="dl('lending-backup-'+today()+'.json','application/json',JSON.stringify(D))">Backup</button><button class="btn" onclick="$('#imp').click()">Restore</button></div>
  <p class="s">Data syncs to the cloud while you are signed in. Back up regularly. (Backup does not include photos.)</p>`);if(ROLE==='admin')fs.stat().then(r=>{const e=$('#stg');if(e)e.textContent=r.n+' photos · '+(r.b/1048576).toFixed(1)+' MB used of about 1,024 MB free'}).catch(()=>{const e=$('#stg');if(e)e.textContent='Not available'})}
@@ -433,7 +441,7 @@ onAuthStateChanged(auth,u=>{unsubs.forEach(f=>f());unsubs=[];ready=false;mirrore
  else{cloud.email=u.email;cloud.err='';if(u.email===ADMIN&&u.emailVerified){window.ROLE='admin';cloud.st='sync';subAdmin()}else{window.ROLE='partner';cloud.st='in';subPartner(u)}}
  render()});
 window.cloudIn=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(e=>{if(e.code!=='auth/popup-closed-by-user')alert('Sign-in failed: '+e.code)});
-window.cloudOut=()=>{if(confirm('Sign out? Your data stays safe in the cloud.'))signOut(auth)};
+window.cloudOut=()=>{if(!confirm('Sign out? Data will be removed from this device and stays safe in the cloud.'))return;signOut(auth).then(()=>{localStorage.removeItem(APP.K);setD({b:[],l:[],n:0,s:{biz:'',phone:'',rd:3}});render()})};
 window.cloudPush=push;
 window.cloudCopyLive=async()=>{if(!APP.beta)return;if(!confirm('Replace ALL beta data with a copy of your live data? Live data is only read, never changed.'))return;
  try{const[a,b]=await Promise.all([getDocs(collection(db,'items')),getDocs(col('items'))]),ops=[];
