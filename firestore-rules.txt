@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == 'akashagrawal.jal@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+    function isApproved(pcol) {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/$(pcol)/$(request.auth.uid))
+        && get(/databases/$(database)/documents/$(pcol)/$(request.auth.uid)).data.status == 'approved';
+    }
+
+    // ---- live collections ----
+    match /items/{id} { allow read, write: if isAdmin(); }
+    match /cfg/{id} { allow read: if request.auth != null; allow write: if isAdmin(); }
+    match /partners/{uid} {
+      allow read: if isAdmin() || request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.status == 'pending' && !('pct' in request.resource.data);
+      allow update: if isAdmin() || (request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','phone','addr','idp','upi']));
+      allow delete: if isAdmin();
+    }
+    match /pl/{id} { allow read: if isAdmin() || (isApproved('partners') && resource.data.pid == request.auth.uid); allow write: if isAdmin(); }
+    match /pp/{id} { allow read: if isAdmin() || (isApproved('partners') && resource.data.pid == request.auth.uid); allow write: if isAdmin(); }
+    match /pb/{id} {
+      allow read: if isAdmin() || (isApproved('partners') && resource.data.pid == request.auth.uid);
+      allow create: if isApproved('partners') && request.resource.data.pid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+    match /pr/{id} {
+      allow read: if isAdmin() || (isApproved('partners') && resource.data.pid == request.auth.uid);
+      allow create: if isApproved('partners') && request.resource.data.pid == request.auth.uid && request.resource.data.status == 'pending';
+      allow update, delete: if isAdmin();
+    }
+    match /pph/{id} {
+      allow read: if isAdmin() || (isApproved('partners') && resource.data.pid == request.auth.uid);
+      allow create: if isApproved('partners') && request.resource.data.pid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // ---- beta collections ----
+    match /items_beta/{id} { allow read, write: if isAdmin(); }
+    match /cfg_beta/{id} { allow read: if request.auth != null; allow write: if isAdmin(); }
+    match /partners_beta/{uid} {
+      allow read: if isAdmin() || request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.status == 'pending' && !('pct' in request.resource.data);
+      allow update: if isAdmin() || (request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','phone','addr','idp','upi']));
+      allow delete: if isAdmin();
+    }
+    match /pl_beta/{id} { allow read: if isAdmin() || (isApproved('partners_beta') && resource.data.pid == request.auth.uid); allow write: if isAdmin(); }
+    match /pp_beta/{id} { allow read: if isAdmin() || (isApproved('partners_beta') && resource.data.pid == request.auth.uid); allow write: if isAdmin(); }
+    match /pb_beta/{id} {
+      allow read: if isAdmin() || (isApproved('partners_beta') && resource.data.pid == request.auth.uid);
+      allow create: if isApproved('partners_beta') && request.resource.data.pid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+    match /pr_beta/{id} {
+      allow read: if isAdmin() || (isApproved('partners_beta') && resource.data.pid == request.auth.uid);
+      allow create: if isApproved('partners_beta') && request.resource.data.pid == request.auth.uid && request.resource.data.status == 'pending';
+      allow update, delete: if isAdmin();
+    }
+    match /pph_beta/{id} {
+      allow read: if isAdmin() || (isApproved('partners_beta') && resource.data.pid == request.auth.uid);
+      allow create: if isApproved('partners_beta') && request.resource.data.pid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+  }
+}

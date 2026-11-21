@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#f59e0b">
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png">
+<title>Loan Ledger BETA</title>
+<style>
+:root{--bg:#f4f5fb;--c:#fff;--bd:#e6e8f0;--tx:#151a2d;--mu:#6b7390;--ac:#5b5bf0;--a2:#06b6d4;--red:#e5484d;--grn:#12a36b;--amb:#d98a0b;--sh:0 6px 24px #1b24470f}
+@media(prefers-color-scheme:dark){:root{--bg:#0b0d17;--c:#151828;--bd:#232842;--tx:#eceefa;--mu:#8e96b8;--ac:#7c83ff;--a2:#22d3ee;--red:#ff7a7f;--grn:#3dd6a0;--amb:#f2b24c;--sh:none}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 -apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;padding-bottom:110px}
+.w{max-width:560px;margin:0 auto;padding:18px 16px}
+h1{font-size:22px;margin:0;letter-spacing:-.3px}h2{margin:0 0 6px;font-size:20px}h3{font-size:13px;color:var(--mu);text-transform:uppercase;letter-spacing:.8px;margin:22px 0 10px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.ib{background:var(--c);border:1px solid var(--bd);border-radius:12px;width:40px;height:40px;font-size:18px;color:var(--tx)}
+.hero{background:linear-gradient(135deg,var(--ac),var(--a2));color:#fff;border-radius:22px;padding:20px;box-shadow:var(--sh)}
+.hero small{opacity:.85}.hero b{display:block;font-size:34px;letter-spacing:-1px;margin:2px 0 12px}
+.pb{height:8px;background:#fff4;border-radius:8px;overflow:hidden;margin-bottom:8px}.pb i{display:block;height:100%;background:#fff;border-radius:8px}
+.sum{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.t{background:var(--c);border:1px solid var(--bd);border-radius:16px;padding:12px 14px;box-shadow:var(--sh)}
+.t small{color:var(--mu);font-size:12px;display:block}.t b{font-size:18px;letter-spacing:-.3px}
+.red{color:var(--red)}.amb{color:var(--amb)}.grn{color:var(--grn)}
+input,select,textarea,button{font:inherit;color:var(--tx)}
+input,select{width:100%;padding:12px;border:1px solid var(--bd);border-radius:12px;background:var(--c);outline:0}
+input:focus,select:focus{border-color:var(--ac)}
+.chips{display:flex;gap:8px;margin:10px 0 14px;overflow-x:auto}
+.chip{padding:7px 14px;border:1px solid var(--bd);border-radius:20px;background:var(--c);white-space:nowrap;font-size:13px}
+.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.row{background:var(--c);border:1px solid var(--bd);border-radius:16px;padding:13px;margin-bottom:9px;display:flex;gap:12px;align-items:center;box-shadow:var(--sh)}
+.row>div:nth-child(2){flex:1;min-width:0}.n{font-weight:600}.s{color:var(--mu);font-size:13px}.r{text-align:right}
+.av{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--ac),var(--a2));color:#fff;display:grid;place-items:center;font-weight:700}
+.b{font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px;background:#8883}
+.b.Overdue{color:var(--red)}.b.Active{color:var(--amb)}.b.Closed{color:var(--grn)}
+.em{color:var(--mu);text-align:center;padding:18px}
+.fab{position:fixed;right:18px;bottom:92px;border:0;border-radius:30px;padding:15px 22px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--ac),var(--a2));box-shadow:0 8px 24px #5b5bf055}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:6px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--c) 85%,transparent);backdrop-filter:blur(14px);border-top:1px solid var(--bd)}
+nav a{flex:1;max-width:160px;text-align:center;font-size:11px;color:var(--mu);padding:6px;border-radius:12px}
+nav a svg{display:block;margin:0 auto 2px;width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav a.on{color:var(--ac);background:#5b5bf014}
+dialog{border:0;padding:0;margin:auto auto 0;width:100%;max-width:560px;max-height:94vh;border-radius:24px 24px 0 0;background:var(--bg);color:var(--tx);animation:up .25s}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+dialog::backdrop{background:#0009;backdrop-filter:blur(3px)}
+#sc,#rcc{padding:18px 18px 30px}
+label{display:block;font-size:12px;color:var(--mu);margin:12px 0 4px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{padding:11px 16px;border-radius:12px;border:1px solid var(--bd);background:var(--c);cursor:pointer;font-weight:600;font-size:14px}
+.btn.p{background:linear-gradient(135deg,var(--ac),var(--a2));color:#fff;border:0}.btn.d{color:var(--red)}
+.bar{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.kv{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid var(--bd)}.kv span:first-child{color:var(--mu);white-space:nowrap}.kv span:last-child{text-align:right}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:8px 3px;border-bottom:1px solid var(--bd);text-align:left}th{color:var(--mu);font-size:11px}td:nth-child(n+2),th:nth-child(n+2){text-align:right}
+.big{font-size:32px;font-weight:700;letter-spacing:-1px;margin:8px 0 0}.pv{font-size:13px;color:var(--mu);margin-top:10px}
+#ri{width:100%;border-radius:12px;border:1px solid var(--bd);background:#fff}
+.cal{background:var(--c);border:1px solid var(--bd);border-radius:20px;padding:14px;box-shadow:var(--sh)}
+.cal .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.cal .hd b{font-size:16px}
+.cal .hd button{background:none;border:0;font-size:24px;color:var(--ac);padding:2px 14px}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}.cg i{font-style:normal;font-size:11px;color:var(--mu);padding:4px 0}
+.cg a{position:relative;padding:10px 0;border-radius:12px;font-size:14px;cursor:pointer}.cg a.t0{background:var(--ac);color:#fff;font-weight:700}
+.cg a u{position:absolute;left:50%;bottom:3px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--amb)}
+.cg a u.red{background:var(--red)}.cg a u.grn{background:var(--grn)}
+.wa{display:inline-block;background:#25d366;color:#04210f;font-weight:700;font-size:14px;padding:11px 16px;border-radius:12px;text-decoration:none;white-space:nowrap}
+.row .wa{font-size:12px;padding:7px 11px}
+#pr{display:none}
+@media print{body>*:not(#pr){display:none!important}#pr{display:block}#pr img{width:100%}dialog{display:none!important}}
+</style></head><body>
+<div class="w"><div class="top"><h1 id="ttl">Overview</h1><button class="ib" onclick="setts()">⚙</button></div><div id="v"></div></div>
+<button class="fab" id="fab">+ Add</button>
+<nav id="nv"></nav>
+<dialog id="sheet"><div id="sc"></div></dialog>
+<dialog id="rcd"><div id="rcc"><img id="ri" alt="Receipt">
+<div class="bar"><button class="btn p" onclick="shr()">Share PNG</button><button class="btn" onclick="prt()">Print</button><button class="btn" onclick="dwn()">Save</button><button class="btn" onclick="$('#rcd').close()" style="margin-left:auto">Close</button></div></div></dialog>
+<div id="pr"><img id="pri" alt=""></div>
+<input type="file" id="imp" accept=".json" hidden onchange="imp(this)">
+
+<script>
+const BETA=true; /* true = test build (separate data). false = live build. */
+const K=BETA?'lend.beta.v2':'lend.v2',NK=BETA?'lend.beta.n':'lend.n',$=s=>document.querySelector(s),sh=$('#sheet');
+window.APP={K,col:BETA?'items_beta':'items',beta:BETA};
+if(BETA){const b=document.createElement('div');b.textContent='BETA · test version · separate data';b.style.cssText='background:#f59e0b;color:#1a1200;font:700 12px system-ui,sans-serif;text-align:center;padding:4px';document.body.prepend(b);document.title='Loan Ledger BETA'}
+let D;try{D=JSON.parse(localStorage.getItem(K))}catch(e){}
+D=D&&D.b?D:{b:[],l:[],n:0,s:{biz:'',phone:'',rd:3}};
+window.cloud={st:'init',email:'',err:''};window.getD=()=>D;window.setD=d=>{D=d};window.ROLE='init';window.PD={uid:'',loaded:false,me:null,l:[],b:[],r:[],p:[],cfg:{}};window.AD={ps:[],rq:[],pb:[],pp:[]};
+let tab='home',fl='All',q='',C=()=>sh.close(),CV,FN;
+const sv=()=>{if(ROLE==='partner')return;localStorage.setItem(K,JSON.stringify(D));window.cloudPush&&window.cloudPush()};
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const B=id=>D.b.find(x=>x.id===id)||{name:'?'},Ln=id=>D.l.find(x=>x.id===id);
+const inr=n=>(n<0?'-':'')+'₹'+Math.abs(Math.round(n)).toLocaleString('en-IN');
+const today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fd=d=>new Date(d+'T00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+const no=l=>'LN-'+String(l.no).padStart(4,'0'),sp=l=>l.pays.slice().sort((a,b)=>a.d.localeCompare(b.d));
+function addM(ds,m){const[y,mo,d]=ds.split('-').map(Number),t=new Date(Date.UTC(y,mo-1+m,1)),
+ last=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth()+1,0)).getUTCDate();t.setUTCDate(Math.min(d,last));return t.toISOString().slice(0,10)}
+function calc(l){const t=l.per==='y'?l.months/12:l.months,int=l.amt*l.rate/100*t,tot=l.amt+int+(l.chg||0),paid=l.pays.reduce((s,p)=>s+p.a,0),
+ bal=tot-paid,due=addM(l.date,l.months),dtd=Math.round((new Date(due)-new Date(today()))/864e5),
+ st=Math.round(bal)<=0?'Closed':dtd<0?'Overdue':'Active';return{int,tot,paid,bal,due,dtd,st,od:st==='Overdue'?-dtd:0}}
+const tag=c=>`<span class="b ${c.st}">${c.st}${c.od?' '+c.od+'d':''}</span>`;
+const T=(a,b,c='')=>`<div class="t"><small>${a}</small><b class="${c}">${b}</b></div>`;
+const f=(id,lab,v,a='')=>`<label>${lab}</label><input id="${id}" value="${esc(v)}" ${a}>`;
+const sel=(id,lab,o,v,a='')=>`<label>${lab}</label><select id="${id}" ${a}>${o.map(x=>`<option value="${x[0]}" ${x[0]===v?'selected':''}>${x[1]}</option>`).join('')}</select>`;
+const MODES=['Cash','UPI','Bank transfer','Cheque'].map(x=>[x,x]);
+function S(h,back){$('#sc').innerHTML=h;C=back||(()=>sh.close());if(!sh.open)sh.showModal();sh.scrollTop=0}
+sh.addEventListener('close',render);sh.addEventListener('click',e=>{if(e.target===sh)sh.close()});
+
+/* ---------- views ---------- */
+function alerts(){return D.l.map(l=>({l,c:calc(l)})).filter(x=>x.c.st==='Overdue'||(x.c.st==='Active'&&x.c.dtd<=D.s.rd)).sort((a,b)=>a.c.dtd-b.c.dtd)}
+function lcard(l,c,nm){return`<div class="row" onclick="lDet('${l.id}')"><div class="av">${esc(B(l.bid).name[0]||'?')}</div><div><div class="n">${esc(B(l.bid).name)}</div>
+ <div class="s">${no(l)} · ${inr(l.amt)} · due ${fd(c.due)}</div></div><div class="r"><b>${inr(Math.max(c.bal,0))}</b><div>${tag(c)}</div></div></div>`}
+function home(){const c=D.l.map(l=>({l,c:calc(l)})),S=f=>c.reduce((s,x)=>s+f(x.c,x.l),0),tot=S(a=>a.tot),pd=S(a=>a.paid),
+ out=S(a=>Math.max(a.bal,0)),p=tot?Math.min(100,pd/tot*100):0,al=alerts(),act=c.filter(x=>x.c.st!=='Closed').length;
+ return`<div class="hero"><small>Total outstanding</small><b>${inr(out)}</b><div class="pb"><i style="width:${p}%"></i></div><small>${p.toFixed(0)}% of ${inr(tot)} collected</small></div>
+ <div class="sum">${T('Disbursed',inr(S((a,l)=>l.amt)))}${T('Collected',inr(pd))}${T('Overdue',inr(S(a=>a.st==='Overdue'?a.bal:0)),'red')}
+ ${T('Due in 7 days',inr(S(a=>a.st==='Active'&&a.dtd<=7?a.bal:0)),'amb')}${T('Open loans',act+' · '+D.b.length+' borrowers')}${T('Interest receivable',inr(S(a=>a.int)))}</div>
+ ${pendCard()}${cloudCard()}${'Notification'in window&&Notification.permission==='default'?`<div class="t" style="margin-top:12px"><b style="font-size:15px">Get due-date alerts</b><div class="s">Phone notification when loans are due or overdue.</div><div class="bar"><button class="btn p" onclick="askN()">Enable alerts</button></div></div>`:''}
+ <h3>Needs attention</h3>${al.length?al.map(x=>`<div class="row" onclick="lDet('${x.l.id}')"><div class="av">${esc(B(x.l.bid).name[0])}</div><div><div class="n">${esc(B(x.l.bid).name)}</div>
+ <div class="s ${x.c.st==='Overdue'?'red':'amb'}">${x.c.st==='Overdue'?'Overdue by '+x.c.od+' days':x.c.dtd?'Due in '+x.c.dtd+' days':'Due today'}</div></div><div class="r"><b>${inr(x.c.bal)}</b><div style="margin-top:6px">${waBtn(x.l)}</div></div></div>`).join(''):'<div class="em">All clear ✓</div>'}<h3>Due calendar</h3>${cal()}`}
+function cloudCard(){const c=window.cloud;
+ if(c.st==='out'||c.st==='err')return`<div class="t" style="margin-top:12px"><b style="font-size:15px">Sign in to sync</b><div class="s">${c.st==='err'?'Sync problem ('+esc(c.err)+'). ':''}Sign in with Google so your data is saved to the cloud and appears on every device.</div><div class="bar"><button class="btn p" onclick="cloudIn()">Sign in with Google</button></div></div>`;
+ return`<div class="s" style="text-align:center;margin-top:10px">${c.st==='in'?'☁ Synced · '+esc(c.email):'☁ Connecting…'}</div>`}
+let cm=0;
+const DEFTPL=`Dear {name},
+
+This is a gentle reminder from {business} regarding your loan {loan_no}.
+
+Loan amount: {loan_amount}
+Total payable: {total}
+Paid so far: {paid}
+Balance due: {balance}
+Due date: {due_date} ({status})
+
+Kindly arrange the payment by the due date. If you have already paid, please ignore this message.
+
+Thank you,
+{business}
+{business_phone}`;
+function waNum(p){let d=String(p||'').replace(/\D/g,'');if(!d)return'';const cc=String(D.s.cc||'91').replace(/\D/g,'');if(d.length===10)d=cc+d;else if(d.length===11&&d[0]==='0')d=cc+d.slice(1);return d}
+function waMsg(l){const c=calc(l),b=B(l.bid),st=c.st==='Closed'?'fully paid':c.st==='Overdue'?'overdue by '+c.od+' days':c.dtd===0?'due today':c.dtd===1?'due tomorrow':'due in '+c.dtd+' days',
+ v={name:b.name,business:D.s.biz||'Your lender',business_phone:D.s.phone||'',loan_no:no(l),loan_amount:inr(l.amt),interest:inr(c.int),total:inr(c.tot),paid:inr(c.paid),balance:inr(Math.max(c.bal,0)),disbursed:fd(l.date),due_date:fd(c.due),status:st};
+ return(D.s.tpl||DEFTPL).replace(/\{(\w+)\}/g,(m,k)=>k in v?v[k]:m).replace(/[ \t]+\n/g,'\n').trim()}
+function waLink(l){const n=waNum(B(l.bid).phone);return n?`https://wa.me/${n}?text=${encodeURIComponent(waMsg(l))}`:''}
+const waBtn=(l,t='WhatsApp')=>{const h=waLink(l);return h?`<a class="wa" href="${h}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${t}</a>`:''};
+function cal(){const t=today(),d0=new Date(),base=new Date(d0.getFullYear(),d0.getMonth()+cm,1),y=base.getFullYear(),m=base.getMonth(),n=new Date(y,m+1,0).getDate(),mp={};
+ D.l.forEach(l=>{const c=calc(l),o=mp[c.due]||(mp[c.due]={});o[c.st==='Overdue'?'red':c.st==='Active'?'amb':'grn']=1});
+ let h='<span></span>'.repeat(base.getDay());
+ for(let d=1;d<=n;d++){const k=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,o=mp[k];
+  h+=`<a class="${k===t?'t0':''}" onclick="dayDet('${k}')">${d}${o?`<u class="${o.red?'red':o.amb?'':'grn'}"></u>`:''}</a>`}
+ return`<div class="cal"><div class="hd"><button onclick="cm--;render()">‹</button><b>${base.toLocaleDateString('en-IN',{month:'long',year:'numeric'})}</b><button onclick="cm++;render()">›</button></div>
+ <div class="cg">${[...'SMTWTFS'].map(x=>`<i>${x}</i>`).join('')}${h}</div><div class="s" style="margin-top:8px;text-align:center"><span class="red">●</span> overdue &nbsp; <span class="amb">●</span> due &nbsp; <span class="grn">●</span> paid</div></div>`}
+function dayDet(k){const ls=D.l.filter(l=>calc(l).due===k),ps=[];D.l.forEach(l=>l.pays.forEach(p=>{if(p.d===k)ps.push({l,p})}));
+ S(`<h2>${fd(k)}</h2><h3>Loans due (${ls.length})</h3>${ls.length?ls.map(l=>{const c=calc(l),b=B(l.bid);return`<div class="t" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between"><div><div class="n">${esc(b.name)}</div><div class="s">${no(l)} · balance ${inr(Math.max(c.bal,0))}</div></div>${tag(c)}</div>
+ <div class="bar"><button class="btn" onclick="lDet('${l.id}')">Open</button>${b.phone?`<a class="btn" href="tel:${esc(b.phone)}" style="text-decoration:none">Call</a>`:''}${waBtn(l)}</div></div>`}).join(''):'<div class="s">No loans due this day</div>'}
+ <h3>Received (${ps.length})</h3>${ps.length?ps.map(x=>`<div class="kv" onclick="lDet('${x.l.id}')"><span>${esc(B(x.l.bid).name)} · ${esc(x.p.mode||'')}</span><span>${inr(x.p.a)}</span></div>`).join(''):'<div class="s">No payments this day</div>'}
+ <div class="bar"><button class="btn" onclick="sh.close()" style="margin-left:auto">Close</button></div>`)}
+let RQ=null;
+const P=id=>AD.ps.find(x=>x.id===id)||{name:'?',pct:0};
+const comm=l=>{const c=calc(l),s=c.tot>0?Math.min(1,c.paid/c.tot):0;return c.int*(l.cpct||0)/100*s};
+const ICO={home:'<path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>',bor:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',loans:'<path d="M4 6h16M4 12h16M4 18h10"/>',par:'<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20a6 6 0 0 1 12 0M15 20a5 5 0 0 1 6-4"/>',req:'<path d="M5 4h14v16H5zM9 9h6M9 13h6"/>'};
+const navH=a=>a.map(x=>`<a data-t="${x[0]}" onclick="go('${x[0]}')"><svg viewBox="0 0 24 24">${ICO[x[0]]}</svg>${x[1]}${x[2]?` <b class="red">${x[2]}</b>`:''}</a>`).join('');
+const kvh=(a,x)=>x?`<div class="kv"><span>${a}</span><span>${esc(x)}</span></div>`:'';
+function shrink(f,m=1000,q=.6){return new Promise((ok,er)=>{const i=new Image();i.onload=()=>{const s=Math.min(1,m/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',q))};i.onerror=er;i.src=URL.createObjectURL(f)})}
+const phBlock=(bid,lid)=>`<h3>Documents</h3><div class="bar" style="margin-top:0"><button class="btn" onclick="phLoad('${bid}','${lid}')">View</button><button class="btn" onclick="phAdd('aadhaar','${bid}','${lid}')">+ Aadhaar</button>${lid?`<button class="btn" onclick="phAdd('collateral','${bid}','${lid}')">+ Collateral</button>`:''}</div><div id="phv"></div>`;
+async function phLoad(bid,lid){const el=$('#phv');el.innerHTML='<div class="s">Loading…</div>';const w=[['bid','==',bid]];if(ROLE==='partner')w.push(['pid','==',PD.uid]);
+ try{const r=(await fs.q('pph',...w)).filter(x=>x.kind==='aadhaar'||!lid||x.lid===lid);el.innerHTML=r.length?r.map(x=>`<div style="margin:10px 0"><div class="s">${x.kind==='aadhaar'?'Aadhaar':'Collateral'}</div><img src="${x.d}" style="width:100%;border-radius:12px">${ROLE==='admin'?`<a class="red" onclick="phDel('${x.id}','${bid}','${lid}')">Delete photo</a>`:''}</div>`).join(''):'<div class="s">No photos yet</div>'}catch(e){el.textContent='Could not load ('+(e.code||e.message)+')'}}
+async function phDel(id,bid,lid){if(!confirm('Delete this photo?'))return;await fs.del('pph',id);phLoad(bid,lid)}
+function phAdd(kind,bid,lid){const i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=async()=>{const f=i.files[0];if(!f)return;
+ try{const d=await shrink(f);if(d.length>900000)return alert('Photo too large, try another');await fs.set('pph',uid('P'),{pid:ROLE==='admin'?'admin':PD.uid,bid,lid:lid||'',kind,d,size:d.length,t:Date.now()});phLoad(bid,lid)}catch(e){alert('Upload failed: '+(e.code||e.message))}};i.click()}
+async function purge(k){let ids=[];
+ if(k==='c'){const a=D.l.filter(l=>calc(l).st==='Closed').map(l=>l.id).concat(AD.rq.filter(r=>r.status==='rejected').map(r=>r.id));
+  if(!a.length)return alert('Nothing to clear');if(!confirm('Delete collateral photos of '+a.length+' closed or rejected loans?'))return;
+  for(const id of a)(await fs.q('pph',['lid','==',id])).forEach(x=>ids.push(x.id))}
+ else{const a=D.b.filter(b=>!D.l.some(l=>l.bid===b.id&&calc(l).st!=='Closed'));if(!a.length)return alert('Nothing to clear');if(!confirm('Delete Aadhaar photos of '+a.length+' borrowers with no open loans?'))return;
+  for(const b of a)(await fs.q('pph',['bid','==',b.id])).filter(x=>x.kind==='aadhaar').forEach(x=>ids.push(x.id))}
+ for(const id of ids)await fs.del('pph',id);alert('Deleted '+ids.length+' photos');setts()}
+
+/* ---- admin: partners ---- */
+const pendN=()=>AD.ps.filter(p=>p.status==='pending').length+AD.rq.filter(r=>r.status==='pending').length;
+function pendCard(){const n=pendN();return n?`<div class="t" style="margin-top:12px"><b style="font-size:15px">${n} item${n>1?'s':''} waiting for your approval</b><div class="bar"><button class="btn p" onclick="go('par')">Review</button></div></div>`:''}
+const rbor=r=>D.b.find(x=>x.id===r.bid)||(AD.pb.find(x=>x.id===r.bid)||{}).j||{};
+function par(){const ps=AD.ps.filter(p=>p.status==='pending'),rq=AD.rq.filter(r=>r.status==='pending'),ap=AD.ps.filter(p=>p.status!=='pending');
+ const pc=p=>[D.l.filter(l=>l.pid===p.id).reduce((s,l)=>s+comm(l),0),AD.pp.filter(x=>x.pid===p.id).reduce((s,x)=>s+x.a,0)];
+ const rw=(id,n,s,r)=>`<div class="row" onclick="${id}"><div class="av">${esc((n||'?')[0])}</div><div><div class="n">${esc(n)}</div><div class="s">${s}</div></div>${r}</div>`;
+ return`<h3>Loan requests (${rq.length})</h3>${rq.length?rq.map(r=>rw(`rqRev('${r.id}')`,rbor(r).name,'via '+esc(P(r.pid).name)+' · '+inr(r.j.amt)+' · '+r.j.months+' mo','<span class="b Active">Review</span>')).join(''):'<div class="em">No pending requests</div>'}
+ <h3>Partner sign-ups (${ps.length})</h3>${ps.length?ps.map(p=>rw(`pDet('${p.id}')`,p.name,esc(p.phone||''),'<span class="b Active">Review</span>')).join(''):'<div class="em">No pending sign-ups</div>'}
+ <h3>Partners (${ap.length})</h3>${ap.length?ap.map(p=>{const[E,pd]=pc(p);return rw(`pDet('${p.id}')`,p.name,(p.pct||0)+'% · earned '+inr(E),`<div class="r"><b>${inr(E-pd)}</b><div class="s">pending</div>${p.status==='suspended'?'<span class="b Overdue">Suspended</span>':''}</div>`)}).join(''):'<div class="em">No partners yet. Share the app link and ask them to sign in.</div>'}`}
+function pDet(pu){const p=P(pu),ls=D.l.filter(l=>l.pid===pu),E=ls.reduce((s,l)=>s+comm(l),0),py=AD.pp.filter(x=>x.pid===pu).sort((a,b)=>b.d.localeCompare(a.d)),pd=py.reduce((s,x)=>s+x.a,0),cu=D.b.filter(b=>b.pid===pu);
+ S(`<h2>${esc(p.name)}</h2><span class="b ${p.status==='approved'?'Closed':p.status==='pending'?'Active':'Overdue'}">${p.status}</span>
+ <div class="sum">${T('Commission earned',inr(E))}${T('Paid out',inr(pd))}${T('Pending payout',inr(E-pd),'amb')}${T('Outstanding',inr(ls.reduce((s,l)=>s+Math.max(calc(l).bal,0),0)))}</div>
+ <div style="margin-top:8px">${kvh('Phone',p.phone)}${kvh('Email',p.email)}${kvh('Address',p.addr)}${kvh('ID proof',p.idp)}${kvh('UPI',p.upi)}</div>
+ ${f('pcp','Commission % of net interest',p.pct==null?25:p.pct,'type=number min=0 max=100 step=any')}
+ <div class="bar">${p.status==='approved'?`<button class="btn d" onclick="pSt('${pu}','suspended')">Suspend</button><button class="btn" onclick="pSt('${pu}','approved')">Save %</button>`:`<button class="btn p" onclick="pSt('${pu}','approved')">Approve</button>`}${p.phone?`<a class="wa" href="https://wa.me/${waNum(p.phone)}" target="_blank">WhatsApp</a>`:''}</div>
+ <h3>Payouts</h3>${py.length?`<table>${py.map(x=>`<tr><td>${fd(x.d)}<div class="s">${esc(x.note||'')}</div></td><td>${inr(x.a)}</td><td><a onclick="payRc('${x.id}')" style="color:var(--ac)">Receipt</a></td></tr>`).join('')}</table>`:'<div class="s">No payouts yet</div>'}
+ <div class="g2" style="margin-top:10px"><input id="pa2" type="number" min="1" placeholder="Amount ₹"><input id="pd2" type="date" value="${today()}"></div><input id="pn2" placeholder="Note (optional)" style="margin-top:8px">
+ <div class="bar"><button class="btn p" onclick="payAdd('${pu}')">Record payout</button></div>
+ <h3>Customers (${cu.length})</h3>${cu.length?cu.map(b=>`<div class="kv" onclick="bDet('${b.id}')"><span>${esc(b.name)}</span><span>${D.l.filter(l=>l.bid===b.id).length} loans</span></div>`).join(''):'<div class="s">None yet</div>'}`)}
+function pSt(pu,st){fs.upd('partners',pu,{status:st,pct:+$('#pcp').value||0}).then(()=>pDet(pu)).catch(e=>alert('Failed: '+(e.code||e.message)))}
+function payAdd(pu){const a=+$('#pa2').value,d=$('#pd2').value;if(!(a>0&&d))return alert('Enter amount and date');fs.set('pp',uid('O'),{pid:pu,a,d,note:$('#pn2').value.trim()}).then(()=>setTimeout(()=>pDet(pu),400))}
+function payRc(id){const x=AD.pp.find(y=>y.id===id),p=P(x.pid);rc(mk('Commission Payout Receipt','PO-'+id.slice(-5).toUpperCase(),[['Partner',p.name],['Phone',p.phone],['Payout date',fd(x.d)],['Amount paid',inr(x.a),1],['Note',x.note],['UPI',p.upi]],['Paid by','Received by']),'payout-'+p.name)}
+function rqRev(rid){const r=AD.rq.find(x=>x.id===rid),q=r.j,p=P(r.pid),b=rbor(r),dup=D.b.find(x=>x.id!==r.bid&&b.phone&&waNum(x.phone)===waNum(b.phone));
+ S(`<h2>Loan request</h2><div class="s">from ${esc(p.name)} · ${p.pct}% commission</div>${dup?`<div class="t red" style="margin:10px 0">⚠ This phone number already exists as ${esc(dup.name)}${dup.pid?' (partner '+esc(P(dup.pid).name)+')':' (your direct customer)'}. Check before approving.</div>`:''}
+ <div style="margin-top:8px">${kvh('Customer',b.name)}${kvh('Phone',b.phone)}${kvh('Address',b.addr)}${kvh('ID proof',b.idp)}${kvh('Amount',inr(q.amt))}${kvh('Tenure',q.months+' months')}${kvh('Proposed rate',q.rate+'% per month')}${kvh('Purpose',q.purpose)}${kvh('Collateral',(q.collateral||'')+(q.cval?' ('+inr(q.cval)+')':''))}${kvh('Guarantor',[q.gname,q.gphone].filter(Boolean).join(' · '))}${kvh('Notes',q.notes)}</div>
+ ${phBlock(r.bid,r.id)}<div class="bar"><button class="btn p" onclick="rqGo('${rid}')">Set terms & approve</button><button class="btn d" onclick="rqNo('${rid}')">Reject</button></div>`)}
+function rqGo(rid){const r=AD.rq.find(x=>x.id===rid),q=r.j;RQ=rid;lForm(r.bid,null,{amt:q.amt,months:q.months,rate:q.rate,purpose:q.purpose,collateral:q.collateral,cval:q.cval,gname:q.gname,gphone:q.gphone,notes:q.notes,nm:rbor(r).name})}
+function rqNo(rid){const t=prompt('Reason for rejecting (the partner will see this):');if(t===null)return;fs.upd('pr',rid,{status:'rejected',reason:t.trim()}).then(()=>sh.close())}
+function rqDone(id){const l=Ln(id),b=B(l.bid),p=P(l.pid),m=`Hi ${p.name}, your loan request for ${b.name} (${inr(l.amt)}) is approved at ${l.rate}% per ${l.per==='y'?'year':'month'}. Loan no. ${no(l)}.`;
+ S(`<h2>Approved ✓</h2><p class="s">${no(l)} created for ${esc(b.name)}.</p><div class="bar">${p.phone?`<a class="wa" href="https://wa.me/${waNum(p.phone)}?text=${encodeURIComponent(m)}" target="_blank">Tell ${esc(p.name)} on WhatsApp</a>`:''}<button class="btn" onclick="lDet('${id}')">Open loan</button></div>`)}
+
+/* ---- partner mode ---- */
+function note(t,b){if(!('Notification'in window)||Notification.permission!=='granted')return;navigator.serviceWorker&&navigator.serviceWorker.ready.then(r=>r.showNotification(t,{body:b,icon:'icon-192.png'})).catch(()=>{})}
+function pdBuild(){if(ROLE!=='partner')return;const c=PD.cfg||{},bm={};PD.b.forEach(b=>bm[b.id]=b);PD.l.forEach(l=>{if(!bm[l.bid])bm[l.bid]={id:l.bid,name:l.nm,phone:l.ph,addr:l.ad}});
+ D={b:Object.values(bm),l:PD.l.map(l=>({...l,pays:l.pays||[]})),n:0,s:{biz:c.biz||'',phone:c.phone||'',rd:3,cc:c.cc||'91',tpl:c.tpl||''}};
+ const s0=localStorage.getItem('pseen'),seen=s0?JSON.parse(s0):null,nw={};
+ PD.r.forEach(r=>{nw[r.id]=r.status;if(seen&&r.status!=='pending'&&seen[r.id]!==r.status)note('Loan request '+r.status,(B(r.bid).name||'')+' · '+inr(r.j.amt))});
+ if(PD.r.length)localStorage.setItem('pseen',JSON.stringify(nw));render()}
+function loginView(){return`<div class="hero"><small>Loan Ledger</small><b style="font-size:26px">Welcome</b><small>Owners and partners sign in with Google.</small></div><div class="bar"><button class="btn p" onclick="cloudIn()">Sign in with Google</button></div><p class="s">New partner? Sign in, then register. The owner will approve your access.</p>`}
+function pgate(){const m=PD.me,adm=waNum((PD.cfg||{}).phone);
+ if(!m)return`<div class="hero"><small>Partner registration</small><b style="font-size:24px">Join as a partner</b></div><form onsubmit="pregSave(event)">${f('rn','Full name *','','required')}<div class="g2">${f('rp','Phone *','','type=tel required')}${f('ri','ID proof (type + last 4)','')}</div>${f('ra','Address','')}${f('ru','UPI ID for payouts','')}<div class="bar"><button class="btn p">Submit for approval</button><button type="button" class="btn" onclick="cloudOut()">Sign out</button></div></form>`;
+ if(m.status==='pending')return`<div class="hero"><small>Registration sent</small><b style="font-size:24px">Waiting for approval</b></div><p class="s">The owner will review your details. You get access once approved.</p><div class="bar">${adm?`<a class="wa" href="https://wa.me/${adm}?text=${encodeURIComponent('Hi, I have registered as a partner ('+m.name+'). Please approve.')}" target="_blank">Notify owner on WhatsApp</a>`:''}<button class="btn" onclick="cloudOut()">Sign out</button></div>`;
+ return`<div class="hero"><small>Access paused</small><b style="font-size:24px">Account suspended</b></div><p class="s">Please contact the owner.</p><div class="bar"><button class="btn" onclick="cloudOut()">Sign out</button></div>`}
+async function pregSave(e){e.preventDefault();const v=i=>$('#'+i).value.trim();try{await fs.set('partners',PD.uid,{name:v('rn'),phone:v('rp'),idp:v('ri'),addr:v('ra'),upi:v('ru'),email:cloud.email,status:'pending',t:Date.now()})}catch(x){alert('Could not submit: '+(x.code||x.message))}}
+function prender(){const nv=$('#nv'),fab=$('#fab'),m=PD.me;window.lDet=pLoan;$('#ttl').textContent='Partner';
+ if(!PD.loaded||!m||m.status!=='approved'){$('#v').innerHTML=PD.loaded?pgate():'<div class="em">Loading…</div>';nv.style.display=fab.style.display='none';return}
+ nv.style.display=fab.style.display='';if(!['home','bor','req'].includes(tab))tab='home';
+ nv.innerHTML=navH([['home','Home'],['bor','Customers'],['req','Requests']]);
+ $('#v').innerHTML=({home:phome,bor:pbor,req:preq})[tab]();$('#ttl').textContent={home:'Overview',bor:'Customers',req:'Requests'}[tab];
+ nv.querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.dataset.t===tab));fab.textContent=tab==='bor'?'+ Customer':'+ Request';fab.onclick=()=>tab==='bor'?pbForm():reqForm()}
+function phome(){const c=D.l.map(l=>({l,c:calc(l)})),S0=f=>c.reduce((s,x)=>s+f(x.c,x.l),0),E=S0((a,l)=>comm(l)),pd=PD.p.reduce((s,x)=>s+x.a,0),al=alerts(),pn=PD.r.filter(r=>r.status==='pending').length;
+ return`<div class="hero"><small>Commission earned</small><b>${inr(E)}</b><small>Paid ${inr(pd)} · Pending payout ${inr(E-pd)}</small></div>
+ <div class="sum">${T('Customers',D.b.length)}${T('Active loans',c.filter(x=>x.c.st!=='Closed').length)}${T('Outstanding',inr(S0(a=>Math.max(a.bal,0))))}${T('Overdue',inr(S0(a=>a.st==='Overdue'?a.bal:0)),'red')}${T('Requests pending',pn)}${T('Due in 7 days',inr(S0(a=>a.st==='Active'&&a.dtd<=7?a.bal:0)),'amb')}</div>
+ ${'Notification'in window&&Notification.permission==='default'?`<div class="t" style="margin-top:12px"><b style="font-size:15px">Get due-date alerts</b><div class="bar"><button class="btn p" onclick="askN()">Enable alerts</button></div></div>`:''}
+ <h3>Needs attention</h3>${al.length?al.map(x=>`<div class="row" onclick="lDet('${x.l.id}')"><div class="av">${esc(B(x.l.bid).name[0])}</div><div><div class="n">${esc(B(x.l.bid).name)}</div><div class="s ${x.c.st==='Overdue'?'red':'amb'}">${x.c.st==='Overdue'?'Overdue by '+x.c.od+' days':x.c.dtd?'Due in '+x.c.dtd+' days':'Due today'}</div></div><div class="r"><b>${inr(x.c.bal)}</b><div style="margin-top:6px">${waBtn(x.l)}</div></div></div>`).join(''):'<div class="em">All clear ✓</div>'}
+ <h3>Due calendar</h3>${cal()}<div class="bar"><button class="btn" onclick="pStmt()">Commission statement</button></div>`}
+function pbor(){return D.b.length?D.b.map(b=>{const ls=D.l.filter(l=>l.bid===b.id),o=ls.reduce((s,l)=>s+Math.max(calc(l).bal,0),0);return`<div class="row" onclick="pCust('${b.id}')"><div class="av">${esc((b.name||'?')[0])}</div><div><div class="n">${esc(b.name)}</div><div class="s">${esc(b.phone||'')} · ${ls.length} loan${ls.length==1?'':'s'}</div></div><b>${inr(o)}</b></div>`}).join(''):'<div class="em">No customers yet. Tap “+ Customer”.</div>'}
+function pCust(id){const b=B(id),ls=D.l.filter(l=>l.bid===id),n=waNum(b.phone);
+ S(`<h2>${esc(b.name)}</h2>${kvh('Phone',b.phone)}${kvh('Address',b.addr)}<div class="bar"><button class="btn p" onclick="reqForm('${id}')">Request loan</button>${b.phone?`<a class="btn" href="tel:${esc(b.phone)}" style="text-decoration:none">Call</a>`:''}${n?`<a class="wa" href="https://wa.me/${n}" target="_blank">WhatsApp</a>`:''}</div>${phBlock(id,'')}<h3>Loans (${ls.length})</h3>${ls.length?ls.map(l=>lcard(l,calc(l))).join(''):'<div class="s">No approved loans yet</div>'}`)}
+function preq(){return PD.r.length?PD.r.map(r=>`<div class="row"><div class="av">${esc((B(r.bid).name||'?')[0])}</div><div><div class="n">${esc(B(r.bid).name)}</div><div class="s">${inr(r.j.amt)} · ${r.j.months} mo · ${fd(new Date(r.t).toISOString().slice(0,10))}${r.reason?'<br>Reason: '+esc(r.reason):''}</div></div><span class="b ${r.status==='approved'?'Closed':r.status==='rejected'?'Overdue':'Active'}">${r.status}</span></div>`).join(''):'<div class="em">No requests yet.</div>'}
+function pbForm(){S(`<h2>New customer</h2><form onsubmit="pbSave(event)">${f('cn','Customer name *','','required')}<div class="g2">${f('cp','Phone *','','type=tel required')}${f('ci','Aadhaar (last 4 digits)','','inputmode=numeric maxlength=4')}</div>${f('ca','Address','')}<label>Aadhaar photo</label><input id="cf" type="file" accept="image/*">
+ <label style="display:flex;gap:8px;align-items:center;margin-top:14px"><input type="checkbox" id="cc" required style="width:auto"> The customer agrees to share these details for a loan application.</label>
+ <div class="bar"><button class="btn p">Save customer</button><button type="button" class="btn" onclick="sh.close()">Cancel</button></div></form>`)}
+async function pbSave(e){e.preventDefault();const v=i=>$('#'+i).value.trim(),ph=waNum(v('cp'));if(D.b.some(b=>waNum(b.phone)===ph))return alert('You already added this customer.');
+ const id=uid('B');try{await fs.set('pb',id,{pid:PD.uid,j:JSON.stringify({id,name:v('cn'),phone:v('cp'),idp:v('ci'),addr:v('ca')})});const f0=$('#cf').files[0];
+  if(f0){const d=await shrink(f0);await fs.set('pph',uid('P'),{pid:PD.uid,bid:id,lid:'',kind:'aadhaar',d,size:d.length,t:Date.now()})}setTimeout(()=>pCust(id),500)}catch(x){alert('Could not save: '+(x.code||x.message))}}
+function reqForm(bid){if(!D.b.length)return pbForm();bid=bid||D.b[0].id;
+ S(`<h2>Request a loan</h2><form onsubmit="reqSave(event)">${sel('qb','Customer',D.b.map(b=>[b.id,esc(b.name)]),bid)}<div class="g2">${f('qa','Amount ₹ *','','type=number min=1 step=any required')}${f('qm','Tenure (months) *','','type=number min=1 step=1 required')}${f('qr','Proposed interest % per month','','type=number min=0 step=any')}${f('qu','Purpose','')}${f('qc','Collateral','')}${f('qv','Collateral value ₹','','type=number step=any')}${f('qg','Guarantor','')}${f('qgp','Guarantor phone','','type=tel')}</div>${f('qn','Notes','')}<label>Collateral photo (optional)</label><input id="qf" type="file" accept="image/*">
+ <div class="s" style="margin-top:8px">The owner sets the final interest rate.</div><div class="bar"><button class="btn p">Send request</button><button type="button" class="btn" onclick="sh.close()">Cancel</button></div></form>`)}
+async function reqSave(e){e.preventDefault();const v=i=>$('#'+i).value.trim(),id=uid('R'),bid=$('#qb').value,b=B(bid),a=+v('qa');
+ const j={amt:a,months:+v('qm'),rate:+v('qr')||0,purpose:v('qu'),collateral:v('qc'),cval:+v('qv')||0,gname:v('qg'),gphone:v('qgp'),notes:v('qn')};
+ try{await fs.set('pr',id,{pid:PD.uid,bid,status:'pending',j:JSON.stringify(j),t:Date.now()});const f0=$('#qf').files[0];if(f0){const d=await shrink(f0);await fs.set('pph',uid('P'),{pid:PD.uid,bid,lid:id,kind:'collateral',d,size:d.length,t:Date.now()})}
+  const adm=waNum(PD.cfg.phone),m=`New loan request from ${PD.me.name}: ${b.name}, ${inr(a)} for ${j.months} months. Please review in the app.`;
+  S(`<h2>Request sent ✓</h2><p class="s">The owner will review it. You will see the status under Requests.</p><div class="bar">${adm?`<a class="wa" href="https://wa.me/${adm}?text=${encodeURIComponent(m)}" target="_blank">Notify owner on WhatsApp</a>`:''}<button class="btn" onclick="sh.close()">Close</button></div>`)}catch(x){alert('Could not send: '+(x.code||x.message))}}
+function pLoan(id){const l=D.l.find(x=>x.id===id),c=calc(l),b=B(l.bid),n=waNum(b.phone);let run=c.tot;
+ const ps=sp(l).map(p=>{run-=p.a;return`<tr><td>${fd(p.d)}</td><td>${inr(p.a)}</td><td>${inr(run)}</td></tr>`}).join('');
+ S(`<div style="display:flex;justify-content:space-between"><div><h2>${esc(b.name)}</h2><span class="s">${no(l)}</span></div>${tag(c)}</div><div class="big">${inr(Math.max(c.bal,0))}</div><div class="s">balance of ${inr(c.tot)} receivable</div>
+ <div style="margin-top:10px">${kvh('Loan amount',inr(l.amt))}${kvh('Interest',l.rate+'% per '+(l.per==='y'?'year':'month')+' × '+l.months+' mo = '+inr(c.int))}${kvh('Disbursed',fd(l.date))}${kvh('Due date',fd(c.due))}${kvh('Repaid',inr(c.paid))}${kvh('Your commission',(l.cpct||0)+'% of interest · earned '+inr(comm(l)))}</div>
+ <h3>Repayments</h3>${ps?`<table><tr><th>Date</th><th>Paid</th><th>Balance</th></tr>${ps}</table>`:'<div class="s">No payments yet</div>'}
+ <div class="bar">${b.phone?`<a class="btn" href="tel:${esc(b.phone)}" style="text-decoration:none">Call</a>`:''}${waBtn(l,'WhatsApp reminder')}<button class="btn" onclick="sh.close()" style="margin-left:auto">Close</button></div>`)}
+function pStmt(){const ls=D.l.filter(l=>comm(l)>0),E=ls.reduce((s,l)=>s+comm(l),0),pd=PD.p.reduce((s,x)=>s+x.a,0);
+ rc(mk('Commission Statement',PD.me.name.slice(0,8).toUpperCase(),[['Partner',PD.me.name],...ls.map(l=>[B(l.bid).name+' · '+no(l),inr(comm(l))]),['Total earned',inr(E),1],['Paid out',inr(pd)],['Pending payout',inr(E-pd),1]],['Partner','Owner']),'commission-statement')}
+function psetts(){S(`<h2>Settings</h2>${kvh('Name',PD.me.name)}${kvh('Phone',PD.me.phone)}${kvh('UPI',PD.me.upi)}${kvh('Signed in',cloud.email)}<div class="bar"><button class="btn" onclick="askN()">Enable phone alerts</button><button class="btn" onclick="ics(D.l)">Calendar reminders</button><button class="btn d" onclick="cloudOut()">Sign out</button></div>`)}
+
+function bl(){const v=D.b.filter(b=>b.name.toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name));
+ return v.length?v.map(b=>{const c=D.l.filter(l=>l.bid===b.id).map(l=>calc(l)),o=c.reduce((s,x)=>s+Math.max(x.bal,0),0),od=c.some(x=>x.st==='Overdue');
+ return`<div class="row" onclick="bDet('${b.id}')"><div class="av">${esc(b.name[0])}</div><div><div class="n">${esc(b.name)}</div><div class="s">${esc(b.phone||'No phone')} · ${c.length} loan${c.length==1?'':'s'}</div></div>
+ <div class="r"><b>${inr(o)}</b>${od?'<div><span class="b Overdue">Overdue</span></div>':''}</div></div>`}).join(''):'<div class="em">No borrowers yet. Tap “+ Add”.</div>'}
+function bor(){return`<input placeholder="Search borrowers…" oninput="q=this.value.toLowerCase();$('#lst').innerHTML=bl()"><div style="height:12px"></div><div id="lst">${bl()}</div>`}
+function ll(){const o={Overdue:0,Active:1,Closed:2},v=D.l.map(l=>({l,c:calc(l)})).filter(x=>(fl==='All'||x.c.st===fl)&&B(x.l.bid).name.toLowerCase().includes(q)).sort((a,b)=>o[a.c.st]-o[b.c.st]||a.c.due.localeCompare(b.c.due));
+ return v.length?v.map(x=>lcard(x.l,x.c)).join(''):'<div class="em">No loans here.</div>'}
+function loans(){return`<input placeholder="Search by borrower…" oninput="q=this.value.toLowerCase();$('#lst').innerHTML=ll()"><div class="chips">${['All','Active','Overdue','Closed'].map(s=>`<span class="chip ${fl===s?'on':''}" onclick="fl='${s}';render()">${s}</span>`).join('')}</div><div id="lst">${ll()}</div>`}
+function render(){if(ROLE==='partner')return prender();window.lDet=LD0;const nv=$('#nv'),fab=$('#fab');
+ if((ROLE==='out'||ROLE==='init')&&!D.b.length&&!D.l.length){$('#ttl').textContent='Loan Ledger';$('#v').innerHTML=loginView();nv.style.display=fab.style.display='none';return}
+ nv.style.display='';const pn=pendN();nv.innerHTML=navH([['home','Dashboard'],['bor','Borrowers'],['loans','Loans'],['par','Partners',pn||'']]);
+ $('#v').innerHTML=({home,bor,loans,par})[tab]();$('#ttl').textContent={home:'Overview',bor:'Borrowers',loans:'Loans',par:'Partners'}[tab];
+ nv.querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.dataset.t===tab));fab.style.display=tab==='par'?'none':'';fab.textContent=tab==='bor'?'+ Borrower':'+ Loan';fab.onclick=()=>tab==='bor'?bForm():lForm()}
+const go=t=>{tab=t;q='';fl='All';render();scrollTo(0,0)};
+
+/* ---------- borrower ---------- */
+function bForm(id){const b=id?B(id):{};
+ S(`<h2>${id?'Edit':'New'} borrower</h2><form onsubmit="bSave(event,'${id||''}')">${f('bn','Full name *',b.name,'required')}
+ <div class="g2">${f('bp','Phone',b.phone,'type=tel')}${f('bi','ID proof (type + last 4)',b.idp)}</div>${f('ba','Address',b.addr)}
+ <div class="g2">${f('bg','Usual guarantor',b.gname)}${f('bgp','Guarantor phone',b.gphone,'type=tel')}</div>${f('bo','Notes',b.notes)}${ROLE==='admin'?sel('bpid','Partner',[['','Direct (no partner)'],...AD.ps.filter(p=>p.status==='approved').map(p=>[p.id,esc(p.name)])],b.pid||''):''}
+ <div class="bar"><button class="btn p">Save</button><button type="button" class="btn" onclick="C()">Cancel</button></div></form>`,id?()=>bDet(id):0)}
+function bSave(e,id){e.preventDefault();const v=i=>$('#'+i).value.trim(),d={name:v('bn'),phone:v('bp'),idp:v('bi'),addr:v('ba'),gname:v('bg'),gphone:v('bgp'),notes:v('bo'),...($('#bpid')?{pid:$('#bpid').value}:{})};
+ if(id)Object.assign(B(id),d);else{id=uid('B');D.b.push({id,...d})}sv();bDet(id)}
+function bDet(id){const b=B(id),ls=D.l.filter(l=>l.bid===id),kv=(a,x)=>x?`<div class="kv"><span>${a}</span><span>${esc(x)}</span></div>`:'';
+ S(`<h2>${esc(b.name)}</h2>${b.phone?`<a href="tel:${esc(b.phone)}" style="color:var(--ac)">${esc(b.phone)}</a>`:''}
+ <div style="margin-top:8px">${kv('Address',b.addr)}${kv('ID proof',b.idp)}${kv('Usual guarantor',[b.gname,b.gphone].filter(Boolean).join(' · '))}${kv('Partner',b.pid?P(b.pid).name+' · '+P(b.pid).pct+'%':'')}${kv('Notes',b.notes)}</div>
+ <div class="bar"><button class="btn p" onclick="lForm('${id}')">+ New loan</button><button class="btn" onclick="bForm('${id}')">Edit</button><button class="btn d" onclick="bDel('${id}')">Delete</button></div>
+ ${phBlock(id,'')}<h3>Loans (${ls.length})</h3>${ls.length?ls.map(l=>lcard(l,calc(l))).join(''):'<div class="em">No loans yet</div>'}`)}
+function bDel(id){if(D.l.some(l=>l.bid===id))return alert('Delete this borrower’s loans first.');if(!confirm('Delete this borrower?'))return;D.b=D.b.filter(b=>b.id!==id);sv();sh.close()}
+
+/* ---------- loan ---------- */
+function lForm(bid,id,pf){if(!pf)RQ=null;if(!D.b.length&&!RQ)return bForm();const l=id?Ln(id):(pf||{}),ob=D.b.map(b=>[b.id,esc(b.name)]);if(RQ&&!D.b.find(b=>b.id===bid))ob.push([bid,esc(pf.nm)]);bid=bid||l.bid||D.b[0].id;
+ S(`<h2>${id?'Edit':'New'} loan</h2><form onsubmit="lSave(event,'${id||''}')">
+ ${sel('lb','Borrower',ob,bid,id?'disabled':'onchange=fill()')}
+ <div class="g2">${f('la','Loan amount ₹ *',l.amt,'type=number min=1 step=any required oninput=pv()')}${f('ld','Disbursed on *',l.date||today(),'type=date required oninput=pv()')}
+ ${f('lr','Interest % *',l.rate,'type=number min=0 step=any required oninput=pv()')}${sel('lp','Rate per',[['m','Month'],['y','Year']],l.per||'m','onchange=pv()')}
+ ${f('lt','Tenure (months) *',l.months,'type=number min=1 step=1 required oninput=pv()')}${sel('lm','Disbursed via',MODES,l.mode||'Cash')}</div>
+ <div class="pv" id="pv"></div>${f('lu','Purpose',l.purpose)}
+ <div class="g2">${f('lc','Collateral',l.collateral)}${f('lcv','Collateral value ₹',l.cval||'','type=number step=any')}${f('lg','Guarantor',l.gname)}${f('lgp','Guarantor phone',l.gphone,'type=tel')}
+ ${f('ldc','Document / pronote no.',l.docs)}${f('lch','Other charges ₹',l.chg||'','type=number step=any oninput=pv()')}</div>${f('ln','Notes',l.notes)}
+ <div class="bar"><button class="btn p">Save</button><button type="button" class="btn" onclick="C()">Cancel</button></div></form>`,id?()=>lDet(id):RQ?()=>rqRev(RQ):0);
+ if(!id&&!RQ)fill();else pv()}
+function fill(){const b=B($('#lb').value),p=D.l.filter(x=>x.bid===b.id).pop()||{};
+ $('#lr').value=p.rate||'';$('#lp').value=p.per||'m';$('#lt').value=p.months||'';$('#lg').value=p.gname||b.gname||'';$('#lgp').value=p.gphone||b.gphone||'';pv()}
+function pv(){const a=+$('#la').value,r=+$('#lr').value,m=+$('#lt').value,d=$('#ld').value,ch=+$('#lch').value||0;
+ $('#pv').textContent=a&&m&&d?(i=>`Interest ${inr(i)} · Total receivable ${inr(a+i+ch)} · Due ${fd(addM(d,m))}`)(a*r/100*($('#lp').value==='y'?m/12:m)):''}
+function lSave(e,id){e.preventDefault();const v=i=>$('#'+i).value.trim(),d={bid:$('#lb').value,amt:+v('la'),date:v('ld'),rate:+v('lr'),per:v('lp'),months:+v('lt'),mode:v('lm'),purpose:v('lu'),
+ collateral:v('lc'),cval:+v('lcv')||0,gname:v('lg'),gphone:v('lgp'),docs:v('ldc'),chg:+v('lch')||0,notes:v('ln')};
+ if(id)Object.assign(Ln(id),d);else{const r=RQ&&AD.rq.find(x=>x.id===RQ);
+  if(r&&!D.b.find(x=>x.id===d.bid)){const q=(AD.pb.find(x=>x.id===d.bid)||{j:{}}).j;D.b.push({id:d.bid,name:q.name||'?',phone:q.phone||'',idp:q.idp||'',addr:q.addr||'',gname:'',gphone:'',notes:'',pid:r.pid})}
+  const b=B(d.bid);id=RQ||uid('L');D.l.push({id,no:++D.n,pays:[],pid:b.pid||'',cpct:b.pid?(P(b.pid).pct||0):0,...d});
+  if(r){fs.upd('pr',RQ,{status:'approved',loanId:id});RQ=null;sv();return rqDone(id)}}sv();lDet(id)}
+function lDet(id){const l=Ln(id),c=calc(l),b=B(l.bid);let run=c.tot;const kv=(a,x)=>x?`<div class="kv"><span>${a}</span><span>${x}</span></div>`:'';
+ const ps=sp(l).map(p=>{run-=p.a;return`<tr><td>${fd(p.d)}<div class="s">${esc(p.mode||'')}</div></td><td>${inr(p.a)}</td><td>${inr(run)}</td><td><a onclick="rP('${id}','${p.id}')" style="color:var(--ac)">Receipt</a> <a onclick="dP('${id}','${p.id}')" class="red">✕</a></td></tr>`}).join('');
+ S(`<div style="display:flex;justify-content:space-between;align-items:flex-start"><div><h2 onclick="bDet('${l.bid}')" style="color:var(--ac)">${esc(b.name)}</h2><span class="s">${no(l)}</span></div>${tag(c)}</div>
+ <div class="big ${c.bal>0?'':'grn'}">${inr(c.bal)}</div><div class="s">balance of ${inr(c.tot)} receivable</div>
+ <div style="margin-top:10px">${kv('Loan amount',inr(l.amt))}${kv('Interest',`${l.rate}% per ${l.per==='y'?'year':'month'} × ${l.months} mo = ${inr(c.int)}`)}${kv('Other charges',l.chg?inr(l.chg):'')}
+ ${kv('Disbursed',fd(l.date)+(l.mode?' · '+esc(l.mode):''))}${kv('Due date',fd(c.due))}${kv('Repaid',inr(c.paid))}${kv('Purpose',esc(l.purpose))}
+ ${kv('Collateral',esc(l.collateral)+(l.cval?' ('+inr(l.cval)+')':''))}${kv('Guarantor',esc([l.gname,l.gphone].filter(Boolean).join(' · ')))}${kv('Documents',esc(l.docs))}${kv('Partner',l.pid?esc(P(l.pid).name)+' · '+(l.cpct||0)+'% · earned '+inr(comm(l)):'')}${kv('Notes',esc(l.notes))}</div>
+ ${phBlock(l.bid,id)}<h3>Repayments</h3>${ps?`<table><tr><th>Date</th><th>Paid</th><th>Balance</th><th></th></tr>${ps}</table>`:'<div class="s">No payments yet</div>'}
+ <div class="g2" style="margin-top:12px"><input id="pd" type="date" value="${today()}"><input id="pa" type="number" min="1" step="any" placeholder="Amount ₹">
+ <select id="pm">${MODES.map(m=>`<option>${m[0]}</option>`).join('')}</select><input id="pr2" placeholder="Reference (optional)"></div>
+ <div class="bar"><button class="btn p" onclick="aP('${id}')">Record repayment</button>${c.bal>0?`<button class="btn" onclick="$('#pa').value=Math.round(${c.bal})">Full balance</button>`:''}</div>
+ <h3>Receipts & reminders</h3><div class="bar" style="margin-top:0"><button class="btn" onclick="rD('${id}')">Loan receipt</button><button class="btn" onclick="rS('${id}')">Statement</button><button class="btn" onclick="ics([Ln('${id}')])">Calendar reminder</button>${waBtn(l,'WhatsApp reminder')}</div>
+ <div class="bar" style="margin-top:22px"><button class="btn" onclick="lForm('${l.bid}','${id}')">Edit</button><button class="btn d" onclick="lDel('${id}')">Delete</button><button class="btn" onclick="sh.close()" style="margin-left:auto">Close</button></div>`)}
+function aP(id){const a=+$('#pa').value,d=$('#pd').value;if(!(a>0&&d))return alert('Enter date and amount');const p={id:uid('P'),d,a,mode:$('#pm').value,ref:$('#pr2').value.trim()};
+ Ln(id).pays.push(p);sv();lDet(id);rP(id,p.id)}
+function dP(id,pid){if(!confirm('Delete this payment?'))return;const l=Ln(id);l.pays=l.pays.filter(p=>p.id!==pid);sv();lDet(id)}
+function lDel(id){if(!confirm('Delete this loan and its repayments?'))return;D.l=D.l.filter(l=>l.id!==id);sv();sh.close()}
+
+/* ---------- receipts ---------- */
+function mk(title,rn,rows,sg){const W=800,P=48,R=46,H=250+rows.length*R+170,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d'),F='system-ui,Arial,sans-serif';
+ x.fillStyle='#fff';x.fillRect(0,0,W,H);const g=x.createLinearGradient(0,0,W,0);g.addColorStop(0,'#4338ca');g.addColorStop(1,'#0891b2');x.fillStyle=g;x.fillRect(0,0,W,160);
+ x.fillStyle='#fff';x.font='700 32px '+F;x.fillText(D.s.biz||'Loan Receipt',P,66);x.font='400 20px '+F;x.fillText(D.s.phone||'',P,98);x.font='700 24px '+F;x.fillText(title.toUpperCase(),P,138);
+ x.textAlign='right';x.font='400 20px '+F;x.fillText('No. '+rn,W-P,66);x.fillText(fd(today()),W-P,98);
+ let y=214;rows.filter(r=>r[1]).forEach(r=>{x.textAlign='left';x.fillStyle='#667085';x.font='400 21px '+F;x.fillText(r[0],P,y);
+  x.textAlign='right';x.fillStyle=r[2]?'#4338ca':'#111827';let s=r[2]?28:22;do{x.font=`${r[2]?700:600} ${s}px ${F}`;s--}while(x.measureText(r[1]).width>W-P*2-230&&s>12);x.fillText(r[1],W-P,y);
+  x.strokeStyle='#eceef4';x.beginPath();x.moveTo(P,y+15);x.lineTo(W-P,y+15);x.stroke();y+=R});
+ y+=70;x.strokeStyle='#98a2b3';[[P,P+270],[W-P-270,W-P]].forEach(a=>{x.beginPath();x.moveTo(a[0],y);x.lineTo(a[1],y);x.stroke()});
+ x.fillStyle='#667085';x.font='400 19px '+F;x.textAlign='left';x.fillText(sg[0],P,y+28);x.textAlign='right';x.fillText(sg[1],W-P,y+28);
+ x.textAlign='center';x.font='400 17px '+F;x.fillText('Computer-generated receipt · Please keep for your records',W/2,H-30);return cv}
+function rc(cv,fn){CV=cv;FN=fn;$('#ri').src=$('#pri').src=cv.toDataURL();$('#rcd').showModal()}
+function shr(){CV.toBlob(b=>{const f=new File([b],FN+'.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f],title:FN}).catch(()=>{});else dwn()})}
+function dwn(){const a=document.createElement('a');a.href=CV.toDataURL();a.download=FN+'.png';a.click()}
+const prt=()=>setTimeout(()=>print(),150);
+const base=l=>[['Borrower',B(l.bid).name],['Phone',B(l.bid).phone],['Loan no.',no(l)]];
+function rD(id){const l=Ln(id),c=calc(l);rc(mk('Loan Disbursement Receipt',no(l),[...base(l),['Date of disbursement',fd(l.date)],['Disbursed via',l.mode],['Loan amount',inr(l.amt),1],
+ ['Interest rate',`${l.rate}% per ${l.per==='y'?'year':'month'} × ${l.months} months`],['Interest',inr(c.int)],['Other charges',l.chg?inr(l.chg):''],['Total receivable',inr(c.tot),1],['Repayment due on',fd(c.due)],
+ ['Purpose',l.purpose],['Collateral',l.collateral+(l.cval?' ('+inr(l.cval)+')':'')],['Guarantor',[l.gname,l.gphone].filter(Boolean).join(' · ')],['Documents',l.docs]],['Lender','Borrower']),'loan-'+no(l))}
+function rP(id,pid){const l=Ln(id),c=calc(l),a=sp(l),i=a.findIndex(p=>p.id===pid),p=a[i],pd=a.slice(0,i+1).reduce((s,x)=>s+x.a,0);
+ rc(mk('Repayment Receipt',no(l).replace('LN','RC')+'-'+(i+1),[...base(l),['Payment date',fd(p.d)],['Mode',p.mode],['Reference',p.ref],['Amount received',inr(p.a),1],['Total receivable',inr(c.tot)],
+ ['Paid till date',inr(pd)],['Balance remaining',inr(c.tot-pd),1],['Due date',fd(c.due)]],['Received by','Paid by']),'repayment-'+no(l)+'-'+(i+1))}
+function rS(id){const l=Ln(id),c=calc(l);rc(mk('Loan Statement',no(l),[...base(l),['Loan amount',inr(l.amt)],['Interest',inr(c.int)],['Total receivable',inr(c.tot),1],['Disbursed',fd(l.date)],['Due date',fd(c.due)],
+ ...sp(l).map((p,i)=>['Paid '+fd(p.d)+(p.mode?' · '+p.mode:''),inr(p.a)]),['Total repaid',inr(c.paid)],['Balance outstanding',inr(c.bal),1]],['Lender','Borrower']),'statement-'+no(l))}
+
+/* ---------- alerts, calendar, settings, backup ---------- */
+function askN(){Notification.requestPermission().then(()=>{render();ntf()})}
+function ntf(){const a=alerts();if(!a.length||!('Notification'in window)||Notification.permission!=='granted'||localStorage.getItem(NK)===today())return;
+ localStorage.setItem(NK,today());const o=a.filter(x=>x.c.st==='Overdue').length;
+ navigator.serviceWorker&&navigator.serviceWorker.ready.then(r=>r.showNotification('Loan Ledger',{body:(o?o+' overdue · ':'')+(a.length-o)+' due soon',icon:'icon-192.png',badge:'icon-192.png'})).catch(()=>{})}
+function ics(ls){ls=ls.filter(l=>calc(l).st!=='Closed');if(!ls.length)return alert('No open loans.');const z=s=>s.replace(/-/g,''),st=new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';
+ let o='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//LoanLedger//EN\r\n';
+ ls.forEach(l=>{const c=calc(l),nx=new Date(c.due+'T00:00Z');nx.setUTCDate(nx.getUTCDate()+1);
+  o+=`BEGIN:VEVENT\r\nUID:${l.id}@loanledger\r\nDTSTAMP:${st}\r\nDTSTART;VALUE=DATE:${z(c.due)}\r\nDTEND;VALUE=DATE:${z(nx.toISOString().slice(0,10))}\r\nSUMMARY:Loan due - ${B(l.bid).name} (${no(l)})\r\nDESCRIPTION:Check balance in Loan Ledger\r\n`+
+  'BEGIN:VALARM\r\nTRIGGER:-PT15H\r\nACTION:DISPLAY\r\nDESCRIPTION:Loan due tomorrow\r\nEND:VALARM\r\nBEGIN:VALARM\r\nTRIGGER:PT9H\r\nACTION:DISPLAY\r\nDESCRIPTION:Loan due today\r\nEND:VALARM\r\nEND:VEVENT\r\n'});
+ dl('loan-reminders.ics','text/calendar',o+'END:VCALENDAR')}
+function dl(n,t,x){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([x],{type:t}));a.download=n;a.click()}
+function setts(){if(ROLE==='partner')return psetts();S(`<h2>Settings</h2>${f('sb','Business name (shown on receipts)',D.s.biz)}<div class="g2">${f('sp','Business phone',D.s.phone,'type=tel')}${f('sr','Alert days before due',D.s.rd,'type=number min=0')}</div>
+ ${f('scc','Default country code for phone numbers',D.s.cc||'91','inputmode=numeric')}<label>WhatsApp message template</label>
+ <textarea id="stp" rows="10" style="width:100%;padding:12px;border:1px solid var(--bd);border-radius:12px;background:var(--c);font:inherit;color:var(--tx)">${esc(D.s.tpl||DEFTPL)}</textarea>
+ <div class="s">Placeholders: {name} {business} {business_phone} {loan_no} {loan_amount} {interest} {total} {paid} {balance} {disbursed} {due_date} {status}</div>
+ <div class="bar" style="margin-top:8px"><button class="btn" type="button" onclick="$('#stp').value=DEFTPL">Reset template</button></div>
+ <div class="bar"><button class="btn p" onclick="sSave()">Save</button></div><h3>Cloud sync</h3><div class="bar" style="margin-top:0">${window.cloud.st==='in'?`<span class="s" style="align-self:center">Signed in as ${esc(window.cloud.email)}</span><button class="btn" onclick="cloudOut()">Sign out</button>`:`<button class="btn p" onclick="cloudIn()">Sign in with Google</button>`}</div>${BETA?`<h3>Beta tools</h3><div class="bar" style="margin-top:0"><button class="btn" onclick="cloudCopyLive()">Copy live data into beta</button></div>`:''}<h3>Storage</h3><div class="s" id="stg">Checking…</div><div class="bar" style="margin-top:6px"><button class="btn" onclick="purge('c')">Delete collateral photos of closed loans</button><button class="btn" onclick="purge('a')">Delete Aadhaar photos of borrowers with no open loans</button></div><h3>Alerts & backup</h3><div class="bar" style="margin-top:0">
+ <button class="btn" onclick="askN()">Enable phone alerts</button><button class="btn" onclick="ics(D.l)">Calendar reminders (all open loans)</button>
+ <button class="btn" onclick="dl('lending-backup-'+today()+'.json','application/json',JSON.stringify(D))">Backup</button><button class="btn" onclick="$('#imp').click()">Restore</button></div>
+ <p class="s">Data syncs to the cloud while you are signed in. Back up regularly. (Backup does not include photos.)</p>`);if(ROLE==='admin')fs.stat().then(r=>{const e=$('#stg');if(e)e.textContent=r.n+' photos · '+(r.b/1048576).toFixed(1)+' MB used of about 1,024 MB free'}).catch(()=>{const e=$('#stg');if(e)e.textContent='Not available'})}
+function sSave(){D.s={biz:$('#sb').value.trim(),phone:$('#sp').value.trim(),rd:+$('#sr').value||0,cc:$('#scc').value.trim()||'91',tpl:(t=>t&&t!==DEFTPL?t:'')($('#stp').value.trim())};sv();sh.close()}
+function imp(i){const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.b||!d.l)throw 0;if(confirm('Replace ALL current data with this backup?')){D=d;sv();sh.close();render()}}catch(e){alert('Not a valid backup file')}i.value=''};i.files[0]&&r.readAsText(i.files[0])}
+const LD0=lDet;
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+render();ntf();
+</script>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import {initializeFirestore,persistentLocalCache,persistentMultipleTabManager,collection,doc,onSnapshot,writeBatch,getDocs,setDoc,updateDoc,deleteDoc,query,where,getAggregateFromServer,count,sum} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+const ADMIN='akashagrawal.jal@gmail.com';
+const app=initializeApp({apiKey:"AIzaSyDW8UB-Ms_sDRqZgNlbByCtDfPnYMUli1k",authDomain:"khata-ledger-695f9.firebaseapp.com",projectId:"khata-ledger-695f9",storageBucket:"khata-ledger-695f9.firebasestorage.app",messagingSenderId:"517636431639",appId:"1:517636431639:web:27675c7b321b644125a152"});
+const auth=getAuth(app),db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})}),cloud=window.cloud,PD=window.PD,AD=window.AD;
+const C=n=>n+(APP.beta?'_beta':''),col=n=>collection(db,C(n)),dc=(n,id)=>doc(db,C(n),id),J=s=>{try{return JSON.parse(s)}catch(e){return{}}};
+let last={},lastPl={},lastCfg='',ready=false,unsubs=[],mirrored=false;
+window.fs={set:(c,id,d)=>setDoc(dc(c,id),d),upd:(c,id,d)=>updateDoc(dc(c,id),d),del:(c,id)=>deleteDoc(dc(c,id)),
+ q:async(c,...w)=>(await getDocs(query(col(c),...w.map(x=>where(...x))))).docs.map(d=>({id:d.id,...d.data()})),
+ stat:async()=>(await getAggregateFromServer(col('pph'),{n:count(),b:sum('size')})).data()};
+const snapshotOf=()=>{const D=getD(),m={meta:JSON.stringify({s:D.s,n:D.n})};D.b.forEach(x=>m['b_'+x.id]=JSON.stringify(x));D.l.forEach(x=>m['l_'+x.id]=JSON.stringify(x));return m};
+async function mirror(){const D=getD(),want={};
+ D.l.forEach(l=>{if(!l.pid)return;const b=D.b.find(x=>x.id===l.bid)||{};want[l.id]={pid:l.pid,j:JSON.stringify({id:l.id,no:l.no,bid:l.bid,nm:b.name,ph:b.phone,ad:b.addr,amt:l.amt,rate:l.rate,per:l.per,months:l.months,date:l.date,chg:l.chg||0,cpct:l.cpct||0,purpose:l.purpose||'',pays:l.pays.map(p=>({d:p.d,a:p.a}))})}});
+ if(!mirrored){mirrored=true;(await getDocs(col('pl'))).forEach(d=>lastPl[d.id]=d.data().pid+'|'+d.data().j)}
+ const b=writeBatch(db);let c=0;
+ for(const k in want){const v=want[k].pid+'|'+want[k].j;if(v!==lastPl[k]){b.set(dc('pl',k),want[k]);lastPl[k]=v;c++}}
+ for(const k in lastPl)if(!want[k]){b.delete(dc('pl',k));delete lastPl[k];c++}
+ const cj=JSON.stringify({biz:D.s.biz||'',phone:D.s.phone||'',tpl:D.s.tpl||'',cc:D.s.cc||'91'});if(cj!==lastCfg){lastCfg=cj;b.set(dc('cfg','public'),JSON.parse(cj));c++}
+ if(c)await b.commit()}
+async function push(){if(!ready||window.ROLE!=='admin')return;const cur=snapshotOf(),b=writeBatch(db);let c=0;
+ for(const k in cur)if(cur[k]!==last[k]){b.set(dc('items',k),{j:cur[k],t:Date.now()});c++}
+ for(const k in last)if(!(k in cur)){b.delete(dc('items',k));c++}
+ try{if(c){last=cur;await b.commit()}await mirror()}catch(e){cloud.st='err';cloud.err=e.code||'write';render()}}
+function sub(){unsubs.push(onSnapshot(col('items'),snap=>{
+ if(snap.metadata.hasPendingWrites&&ready)return;
+ if(!snap.size&&snap.metadata.fromCache)return;
+ const m={};snap.forEach(d=>m[d.id]=d.data().j);const L0=getD();
+ if(!snap.size){ready=true;last={};cloud.st='in';push();render();return}
+ const D={b:[],l:[],n:L0.n||0,s:L0.s};
+ for(const k in m){const v=JSON.parse(m[k]);if(k==='meta'){D.s=v.s;D.n=v.n}else if(k[0]==='b')D.b.push(v);else D.l.push(v)}
+ D.n=Math.max(D.n||0,...D.l.map(l=>l.no||0));
+ setD(D);last=m;ready=true;localStorage.setItem(APP.K,JSON.stringify(D));cloud.st='in';render();push()},
+ e=>{cloud.st='err';cloud.err=e.code||'listen';render()}))}
+function subAdmin(){sub();
+ unsubs.push(onSnapshot(col('partners'),s=>{AD.ps=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{}));
+ unsubs.push(onSnapshot(col('pr'),s=>{AD.rq=s.docs.map(d=>({id:d.id,...d.data(),j:J(d.data().j)})).sort((a,b)=>b.t-a.t);render()},()=>{}));
+ unsubs.push(onSnapshot(col('pb'),s=>{AD.pb=s.docs.map(d=>({id:d.id,pid:d.data().pid,j:J(d.data().j)}))},()=>{}));
+ unsubs.push(onSnapshot(col('pp'),s=>{AD.pp=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{}))}
+function subPartner(u){const pid=u.uid;Object.assign(PD,{uid:pid,loaded:false,me:null,l:[],b:[],r:[],p:[],cfg:{}});let inner=[];const stop=()=>{inner.forEach(f=>f());inner=[]};
+ unsubs.push(stop);
+ unsubs.push(onSnapshot(dc('cfg','public'),s=>{PD.cfg=s.exists()?s.data():{};pdBuild()},()=>{}));
+ unsubs.push(onSnapshot(dc('partners',pid),s=>{PD.me=s.exists()?{id:pid,...s.data()}:null;PD.loaded=true;
+  if(PD.me&&PD.me.status==='approved'){if(!inner.length){const q=n=>query(col(n),where('pid','==',pid));
+   inner.push(onSnapshot(q('pl'),s=>{PD.l=s.docs.map(d=>J(d.data().j));pdBuild()},()=>{}));
+   inner.push(onSnapshot(q('pb'),s=>{PD.b=s.docs.map(d=>J(d.data().j));pdBuild()},()=>{}));
+   inner.push(onSnapshot(q('pr'),s=>{PD.r=s.docs.map(d=>({id:d.id,...d.data(),j:J(d.data().j)})).sort((a,b)=>b.t-a.t);pdBuild()},()=>{}));
+   inner.push(onSnapshot(q('pp'),s=>{PD.p=s.docs.map(d=>d.data());pdBuild()},()=>{}))}}else stop();
+  pdBuild()},e=>{cloud.err=e.code;PD.loaded=true;pdBuild()}))}
+onAuthStateChanged(auth,u=>{unsubs.forEach(f=>f());unsubs=[];ready=false;mirrored=false;lastPl={};lastCfg='';
+ if(!u){window.ROLE='out';cloud.st='out';cloud.email=''}
+ else{cloud.email=u.email;cloud.err='';if(u.email===ADMIN&&u.emailVerified){window.ROLE='admin';cloud.st='sync';subAdmin()}else{window.ROLE='partner';cloud.st='in';subPartner(u)}}
+ render()});
+window.cloudIn=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(e=>{if(e.code!=='auth/popup-closed-by-user')alert('Sign-in failed: '+e.code)});
+window.cloudOut=()=>{if(confirm('Sign out? Your data stays safe in the cloud.'))signOut(auth)};
+window.cloudPush=push;
+window.cloudCopyLive=async()=>{if(!APP.beta)return;if(!confirm('Replace ALL beta data with a copy of your live data? Live data is only read, never changed.'))return;
+ try{const[a,b]=await Promise.all([getDocs(collection(db,'items')),getDocs(col('items'))]),ops=[];
+  b.forEach(d=>ops.push(['d',d.id]));a.forEach(d=>ops.push(['s',d.id,d.data()]));
+  for(let i=0;i<ops.length;i+=400){const w=writeBatch(db);ops.slice(i,i+400).forEach(o=>o[0]==='d'?w.delete(dc('items',o[1])):w.set(dc('items',o[1]),o[2]));await w.commit()}
+  alert('Done. Beta now has a copy of your live data.')}catch(e){alert('Copy failed: '+(e.code||e.message))}};
+</script>
+
+</body></html>
